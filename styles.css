@@ -33,11 +33,17 @@ body {
   text-transform: lowercase;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
+.column-wrap {
+  background-color: #f9d9d8;
+  border-radius: 6px;
+
+  max-height: calc(100vh - 200px);
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
 .column {
   position: relative;
-  background-color: #f9d9d8;
   min-height: 71px;
-  border-radius: 6px;
   transition: height 0.3s;
 }
 .item {

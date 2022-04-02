@@ -3,7 +3,11 @@ window.addEventListener('load', () => {
   const allGrids = []
   let floatingItem
   cols.forEach((col, ix) => {
-    const grid = new Muuri(col, { dragEnabled: true, dragSort: () => allGrids })
+    const grid = new Muuri(col, {
+      dragEnabled: true,
+      dragContainer: document.body,
+      dragSort: () => allGrids,
+    })
     allGrids.push(grid)
 
     grid.on('dragStart', (item) => {
