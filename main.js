@@ -1,3 +1,7 @@
+const activeBugs = new Set()
+const addedFeatures = new Set()
+let nextId = 1
+
 window.addEventListener('load', () => {
   const dragContainer = document.createElement('div')
   dragContainer.style.position = 'fixed'
@@ -76,17 +80,26 @@ window.addEventListener('load', () => {
   })
 
   const createTask = () => {
+    const ticketId = `${nextId++}`
+    const ticketType = Math.random() > 0.5 ? 'Bug' : 'Feature'
+
     const backCol = allGrids[0]
     const item = document.createElement('div')
     item.className = 'item'
-    item.dataset.creationDate = Date.now()
+    item.dataset.ticketId = ticketId
+    item.dataset.ticketType = ticketType
     const itemContent = document.createElement('div')
     itemContent.className = 'item-content'
-    itemContent.textContent = `Hello world! This is a task created on ${Date.now()}`
+    itemContent.textContent = `${ticketType} #${ticketId}`
     item.appendChild(itemContent)
 
     const newItem = backCol.add(item, { index: -1, active: false })
-    backCol.show([backCol.getItem(-1)])
+    const mitem = backCol.getItem(-1)
+    backCol.show([mitem])
+
+    if (ticketType === 'Bug') {
+      activeBugs.add(ticketId)
+    }
   }
 
   const startTask = () => {
@@ -100,7 +113,16 @@ window.addEventListener('load', () => {
     const workCol = allGrids[2]
     const doneCol = allGrids[3]
     const ix = workCol.getItem(0) === floatingItem ? 1 : 0
-    workCol.send(ix, doneCol, 0)
+    const mitem = workCol.getItem(ix)
+    if (!mitem) return
+    const ticketId = mitem.getElement().dataset.ticketId
+    const ticketType = mitem.getElement().dataset.ticketType
+    if (ticketType === 'Bug') {
+      activeBugs.delete(ticketId)
+    } else {
+      addedFeatures.add(ticketId)
+    }
+    workCol.send(mitem, doneCol, 0)
   }
 
   setInterval(() => {
@@ -116,4 +138,11 @@ window.addEventListener('load', () => {
       startTask()
     }, 500)
   }, 2000)
+
+  const bugsCounter = document.querySelector('#num-bugs')
+  const featCounter = document.querySelector('#num-feat')
+  setInterval(() => {
+    bugsCounter.textContent = `${activeBugs.size}`
+    featCounter.textContent = `${addedFeatures.size}`
+  }, 100)
 })
