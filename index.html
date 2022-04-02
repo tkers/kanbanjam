@@ -9,21 +9,38 @@
     <script type="text/javascript" src="main.js"></script>
   </head>
   <body>
-    <div class="grid">
-      <div class="item">
-        <div class="item-content">
-          <!-- Safe zone, enter your custom markup -->
-          This can be anything.
-          <!-- Safe zone ends -->
+    <div class="board">
+      <div class="board-column">
+        <div class="column-title">Todo</div>
+        <div class="column">
+          <div class="item">
+            <div class="item-content">This can be anything.</div>
+          </div>
+
+          <div class="item">
+            <div class="item-content">
+              <div class="my-custom-content">Yippee!</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="item">
-        <div class="item-content">
-          <!-- Safe zone, enter your custom markup -->
-          <div class="my-custom-content">Yippee!</div>
-          <!-- Safe zone ends -->
+      <div class="board-column">
+        <div class="column-title">In progress</div>
+        <div class="column">
+          <div class="item">
+            <div class="item-content">some other card</div>
+          </div>
+
+          <div class="item">
+            <div class="item-content">And again</div>
+          </div>
         </div>
+      </div>
+
+      <div class="board-column">
+        <div class="column-title">Done!</div>
+        <div class="column"></div>
       </div>
     </div>
   </body>

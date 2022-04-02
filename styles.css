@@ -1,15 +1,46 @@
-.grid {
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: monospace;
+}
+* {
+  box-sizing: border-box;
+}
+.board {
+  overflow-x: scroll;
+  white-space: nowrap;
+  padding: 32px;
+}
+.board-column {
+  display: inline-block;
+  width: 400px;
+  margin: 12px;
+  padding: 2px;
+  background-color: #77e;
+  color: #fff;
+}
+.column-title {
+  padding: 12px;
+  font-weight: bold;
+}
+.column {
   position: relative;
+  background-color: #eef;
+  padding: 24px;
+  transition: height 0.3s;
 }
 .item {
   display: block;
   position: absolute;
-  width: 100px;
-  height: 100px;
-  margin: 5px;
+  width: calc(400px - 16px);
+  /* height: 100px; */
+  margin: 8px;
+  padding: 24px;
   z-index: 1;
-  background: #000;
-  color: #fff;
+  background: #fff;
+  color: #000;
+  border: 1px solid #77e;
 }
 .item.muuri-item-dragging {
   z-index: 3;
