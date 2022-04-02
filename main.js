@@ -17,7 +17,16 @@ window.addEventListener('load', () => {
       dragAutoScroll: {
         targets: [
           // Scroll window on both x-axis and y-axis.
-          { element: window, priority: 0 },
+          {
+            element: window,
+            priority: 0,
+            axis: Muuri.AutoScroller.AXIS_X,
+          },
+          {
+            element: col.parentNode,
+            priority: 1,
+            axis: Muuri.AutoScroller.AXIS_Y,
+          },
           // Scroll scrollElement (can be any scrollable element) on y-axis only,
           // and prefer it over window in conflict scenarios.
           // { element: scrollElement, priority: 1, axis: Muuri.AutoScroller.AXIS_Y },
