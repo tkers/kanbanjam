@@ -2,48 +2,53 @@ html,
 body {
   margin: 0;
   padding: 0;
-  font-family: monospace;
 }
-* {
-  box-sizing: border-box;
+
+body {
+  background-color: #f7e9de;
+  color: #1a1a1a;
+  font-family: sans-serif;
 }
+
 .board {
-  overflow-x: scroll;
-  white-space: nowrap;
   padding: 32px;
+  white-space: nowrap;
 }
 .board-column {
   display: inline-block;
-  width: 400px;
+  width: 300px;
   margin: 12px;
   padding: 2px;
-  background-color: #77e;
+  box-sizing: content-box;
+  background-color: #d87f7a;
   color: #fff;
+  border-radius: 8px;
+  vertical-align: top;
 }
 .column-title {
   padding: 12px;
   font-weight: bold;
+  text-align: center;
+  font-variant: small-caps;
+  text-transform: lowercase;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 .column {
   position: relative;
-  background-color: #eef;
-  padding: 24px;
+  background-color: #f9d9d8;
+  min-height: 71px;
+  border-radius: 6px;
   transition: height 0.3s;
 }
 .item {
   display: block;
   position: absolute;
-  width: calc(400px - 16px);
-  /* height: 100px; */
-  margin: 8px;
-  padding: 24px;
   z-index: 1;
-  background: #fff;
-  color: #000;
-  border: 1px solid #77e;
 }
 .item.muuri-item-dragging {
   z-index: 3;
+  cursor: grabbing;
+  opacity: 0.8;
 }
 .item.muuri-item-releasing {
   z-index: 2;
@@ -52,7 +57,15 @@ body {
   z-index: 0;
 }
 .item-content {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  box-sizing: border-box;
+  width: calc(300px - 16px);
+  white-space: normal;
+  background-color: #ffffff;
+  color: #1a1a1a;
+  border: 2px solid #000000;
+  border-radius: 8px;
+  box-shadow: 2px 2px 0px #000000;
+  padding: 16px 24px;
+  margin: 8px;
+  cursor: grab;
 }
