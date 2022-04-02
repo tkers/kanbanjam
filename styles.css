@@ -81,6 +81,21 @@ body {
   padding: 16px 24px;
   margin: 8px;
 }
+.item-assignment {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 50px;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  line-height: 24px;
+  vertical-align: top;
+}
+.item .item-assignment {
+  float: right;
+}
 
 .counter {
   margin: 0 0 0 12px;
@@ -88,4 +103,6 @@ body {
   border: 2px solid #000000;
   border-radius: 24px;
   display: inline-block;
+  height: 24px;
+  line-height: 24px;
 }

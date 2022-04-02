@@ -1,6 +1,22 @@
-const activeBugs = new Set()
-const addedFeatures = new Set()
+const allTickets = new Map()
 let nextId = 1
+
+let completedFeatures = 0
+let activeBugs = 0
+
+let workerId = 0
+
+const newWorker = (spd) => ({
+  name: String.fromCharCode(
+    65 + (workerId % 26),
+    Math.floor(65 + Math.random() * 26)
+  ),
+  id: workerId++,
+  currentTask: null,
+  speed: spd || 100,
+  workLeft: 0,
+})
+const workers = [newWorker(), newWorker()]
 
 const rand = (arr) => arr[Math.floor(Math.random() * arr.length)]
 const makeBugFlavour = () =>
@@ -86,13 +102,6 @@ window.addEventListener('load', () => {
         sortDuringScroll: false,
         // Enable smooth stop.
         smoothStop: true,
-        // Finally let's log some data when auto-scroll starts and stops.
-        // onStart: function (item, scrollElement, direction) {
-        //   console.log('AUTOSCROLL STARTED', item, scrollElement, direction)
-        // },
-        // onStop: function (item, scrollElement, direction) {
-        //   console.log('AUTOSCROLL STOPPED', item, scrollElement, direction)
-        // },
       },
     })
     allGrids.push(grid)
@@ -106,39 +115,48 @@ window.addEventListener('load', () => {
   })
 
   const createTask = () => {
-    const ticketId = `${nextId++}`
-    const ticketType = Math.random() > 0.5 ? 'Bug' : 'Feature'
+    const ticket = {
+      id: `${nextId++}`,
+      type: Math.random() > 0.5 ? 'Bug' : 'Feature',
+      size: rand([1, 2, 2, 4, 4, 4, 8, 8, 16, 32]),
+    }
+    if (ticket.type === 'Bug') activeBugs++
+    if (ticket.type === 'Feature' && Math.random() > 0.5) {
+      ticket.reward = rand(['10x', 'dev', 'qa'])
+    }
+    allTickets.set(ticket.id, ticket)
 
     const backCol = allGrids[0]
     const item = document.createElement('div')
     item.className = 'item'
-    item.dataset.ticketId = ticketId
-    item.dataset.ticketType = ticketType
+    item.dataset.ticketId = ticket.id
     const itemContent = document.createElement('div')
     itemContent.className = 'item-content'
-    const title = `TICK-${ticketId.padStart(4, '0')} [${
-      ticketType === 'Bug' ? 'BUG' : 'FEAT'
+    const title = `TICK-${ticket.id.padStart(4, '0')} [${
+      ticket.type === 'Bug' ? 'BUG' : 'FEAT'
     }]`
     const description =
-      ticketType === 'Bug' ? makeBugFlavour() : makeFeatFlavour()
-    itemContent.innerHTML = `<strong>${title}</strong><br>${description}`
+      ticket.type === 'Bug' ? makeBugFlavour() : makeFeatFlavour()
+    itemContent.innerHTML = `<strong>${title}</strong><div class="item-assignment"></div><br/>${description} (${
+      ticket.size
+    }) ${ticket.reward || ''}`
     item.appendChild(itemContent)
 
     const newItem = backCol.add(item, { index: -1, active: false })
     const mitem = backCol.getItem(-1)
     backCol.show([mitem])
-
-    if (ticketType === 'Bug') {
-      activeBugs.add(ticketId)
-    }
   }
 
-  const startTask = () => {
+  const startTask = (worker) => {
     const todoCol = allGrids[1]
     const workCol = allGrids[2]
     const ix = todoCol.getItem(0) === floatingItem ? 1 : 0
     const item = todoCol.getItem(ix)
     if (!item) return
+    const as = item.getElement().querySelector('.item-assignment')
+    as.classList.add('item-assigned')
+    as.textContent = worker.name
+    as.style.backgroundColor = `hsl(${(worker.id * 80) % 360}, 78%, 42%)`
     todoCol.send(item, workCol, -1)
     return item
   }
@@ -147,13 +165,15 @@ window.addEventListener('load', () => {
     const workCol = allGrids[2]
     const doneCol = allGrids[3]
     if (!mitem) return
-    const ticketId = mitem.getElement().dataset.ticketId
-    const ticketType = mitem.getElement().dataset.ticketType
-    if (ticketType === 'Bug') {
-      activeBugs.delete(ticketId)
-    } else {
-      addedFeatures.add(ticketId)
-    }
+    const ticket = allTickets.get(mitem.getElement().dataset.ticketId)
+    ticket.done = true
+    if (ticket.type === 'Bug') activeBugs--
+    if (ticket.type === 'Feature') completedFeatures++
+
+    if (ticket.reward === 'dev') workers.push(newWorker(100))
+    if (ticket.reward === '10x') workers.push(newWorker(200))
+    if (ticket.reward === 'qa') workers.push(newWorker(70))
+
     workCol.send(mitem, doneCol, 0)
   }
 
@@ -167,36 +187,60 @@ window.addEventListener('load', () => {
   setInterval(() => {
     if (Math.random() < 0.9) return
     createTask()
+    refreshStats()
   }, 250)
 
-  const doWork = () => {
-    const task = startTask()
-    if (task) {
-      setTimeout(() => {
-        completeMyTask(task)
-        setTimeout(doWork, 500 + Math.random() * 1000)
-      }, 8000 + Math.random() * 4000)
-    } else {
-      // recheck
-      setTimeout(doWork, 500 + Math.random() * 1000)
-    }
-  }
-
-  doWork()
-  doWork()
+  setInterval(() => {
+    workers.forEach((worker) => {
+      worker.workLeft -= worker.speed
+      if (worker.workLeft > 0) return
+      if (worker.currentTask) {
+        completeMyTask(worker.currentTask)
+        worker.currentTask = null
+        refreshStats()
+        worker.workLeft = 500 + Math.random() * 500
+      } else {
+        const task = startTask(worker)
+        if (task) {
+          const ticket = allTickets.get(task.getElement().dataset.ticketId)
+          worker.currentTask = task
+          refreshStats()
+          worker.workLeft = 1000 * ticket.size
+        } else {
+          worker.workLeft = 1000 + Math.random() * 1000
+        }
+      }
+    })
+  }, 100)
 
   const bugsCounter = document.querySelector('#num-bugs')
   const featCounter = document.querySelector('#num-feat')
-  setInterval(() => {
-    bugsCounter.textContent = `${activeBugs.size}`
-    featCounter.textContent = `${addedFeatures.size}`
-  }, 1000)
+  const teamMembers = document.querySelector('#team-members')
+  refreshStats = () => {
+    // const activeBugs = allTickets
+    //   .values()
+    //   .filter((t) => t.type === 'Bug' && !t.done)
+    // const addedFeatures = allTickets
+    //   .values()
+    //   .filter((t) => t.type === 'Feature' && t.done)
+    bugsCounter.textContent = `${activeBugs}`
+    featCounter.textContent = `${completedFeatures}`
+    teamMembers.innerHTML = workers
+      .map(
+        (worker) =>
+          `<div class="item-assignment" style="background-color: hsl(${
+            (worker.id * 80) % 360
+          }, ${worker.currentTask ? 0 : 78}%, ${
+            worker.currentTask ? 73 : 42
+          }%)">${worker.name}</div>`
+      )
+      .join(' ')
+  }
 
   createTask()
   createTask()
   createTask()
   createTask()
   createTask()
-  bugsCounter.textContent = `${activeBugs.size}`
-  featCounter.textContent = `${addedFeatures.size}`
+  refreshStats()
 })
