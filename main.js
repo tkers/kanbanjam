@@ -8,12 +8,20 @@ window.addEventListener('load', () => {
 
   const cols = [].slice.call(document.querySelectorAll('.column'))
   const allGrids = []
+
+  const dragSorts = [
+    () => allGrids.slice(0, 2), // reorder backlog, move to todo
+    () => allGrids.slice(0, 2), // reorder todo, back to backlog
+    () => allGrids.slice(2, 3), // reorder doing, no moving
+    false,
+  ]
+
   let floatingItem
   cols.forEach((col, ix) => {
     const grid = new Muuri(col, {
-      dragEnabled: true,
+      dragEnabled: ix !== 3,
       dragContainer: dragContainer,
-      dragSort: () => allGrids,
+      dragSort: dragSorts[ix],
       dragAutoScroll: {
         targets: [
           // Scroll window on both x-axis and y-axis.
