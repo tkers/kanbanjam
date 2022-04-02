@@ -6,6 +6,19 @@ window.addEventListener('load', () => {
     allGrids.push(grid)
   })
 
+  document.querySelector('#btn-todo').addEventListener('click', () => {
+    const todoCol = allGrids[0]
+    const item = document.createElement('div')
+    item.className = 'item'
+    const itemContent = document.createElement('div')
+    itemContent.className = 'item-content'
+    itemContent.textContent = `Hello world! ${Date.now()}`
+    item.appendChild(itemContent)
+
+    const newItem = todoCol.add(item, { index: -1, active: false })
+    todoCol.show([todoCol.getItem(-1)])
+  })
+
   document.querySelector('#btn-plan').addEventListener('click', () => {
     const todoCol = allGrids[0]
     const workCol = allGrids[1]
