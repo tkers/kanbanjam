@@ -1,9 +1,17 @@
 window.addEventListener('load', () => {
   const cols = [].slice.call(document.querySelectorAll('.column'))
   const allGrids = []
+  let floatingItem
   cols.forEach((col, ix) => {
     const grid = new Muuri(col, { dragEnabled: true, dragSort: () => allGrids })
     allGrids.push(grid)
+
+    grid.on('dragStart', (item) => {
+      floatingItem = item
+    })
+    grid.on('dragEnd', () => {
+      floatingItem = null
+    })
   })
 
   setInterval(() => {
@@ -27,6 +35,8 @@ window.addEventListener('load', () => {
 
     const workCol = allGrids[1]
     const doneCol = allGrids[2]
-    workCol.send(0, doneCol, 0)
+
+    const ix = workCol.getItem(0) === floatingItem ? 1 : 0
+    workCol.send(ix, doneCol, 0)
   }, 500)
 })
