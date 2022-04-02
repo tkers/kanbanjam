@@ -1,4 +1,8 @@
 window.addEventListener('load', () => {
   const cols = [].slice.call(document.querySelectorAll('.column'))
-  cols.forEach((col) => new Muuri(col, { dragEnabled: true }))
+  const allGrids = []
+  cols.forEach((col) => {
+    const grid = new Muuri(col, { dragEnabled: true, dragSort: () => allGrids })
+    allGrids.push(grid)
+  })
 })
