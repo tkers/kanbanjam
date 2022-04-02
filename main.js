@@ -2,6 +2,32 @@ const activeBugs = new Set()
 const addedFeatures = new Set()
 let nextId = 1
 
+const rand = (arr) => arr[Math.floor(Math.random() * arr.length)]
+const makeBugFlavour = () =>
+  rand([
+    'Signup page is broken again',
+    'Users are not able to log in',
+    'Newsletter unsubscribe button is not working',
+    'Your email verification regex missed an edge case',
+    'People with a short lastname are unable to signup',
+    'Payment API key has expired',
+    'TLS certificates have expired',
+    'Caches need to be purged after the last release',
+    'DNS issues again',
+  ])
+
+const makeFeatFlavour = () =>
+  rand([
+    'Implement dark mode',
+    'Make the application responsive',
+    'IE6 support, please!',
+    'Optimise loading times',
+    'Optimise bundle size',
+    'Expand CDN services',
+    "Migrate to K8S, it's what the cool kids use",
+    'Upgrade left-pad library',
+  ])
+
 window.addEventListener('load', () => {
   const dragContainer = document.createElement('div')
   dragContainer.style.position = 'fixed'
@@ -90,7 +116,12 @@ window.addEventListener('load', () => {
     item.dataset.ticketType = ticketType
     const itemContent = document.createElement('div')
     itemContent.className = 'item-content'
-    itemContent.textContent = `${ticketType} #${ticketId}`
+    const title = `TICK-${ticketId.padStart(4, '0')} [${
+      ticketType === 'Bug' ? 'BUG' : 'FEAT'
+    }]`
+    const description =
+      ticketType === 'Bug' ? makeBugFlavour() : makeFeatFlavour()
+    itemContent.innerHTML = `<strong>${title}</strong><br>${description}`
     item.appendChild(itemContent)
 
     const newItem = backCol.add(item, { index: -1, active: false })
@@ -106,14 +137,15 @@ window.addEventListener('load', () => {
     const todoCol = allGrids[1]
     const workCol = allGrids[2]
     const ix = todoCol.getItem(0) === floatingItem ? 1 : 0
-    todoCol.send(ix, workCol, 0)
+    const item = todoCol.getItem(ix)
+    if (!item) return
+    todoCol.send(item, workCol, -1)
+    return item
   }
 
-  const completeTask = () => {
+  const completeMyTask = (mitem) => {
     const workCol = allGrids[2]
     const doneCol = allGrids[3]
-    const ix = workCol.getItem(0) === floatingItem ? 1 : 0
-    const mitem = workCol.getItem(ix)
     if (!mitem) return
     const ticketId = mitem.getElement().dataset.ticketId
     const ticketType = mitem.getElement().dataset.ticketType
@@ -125,24 +157,46 @@ window.addEventListener('load', () => {
     workCol.send(mitem, doneCol, 0)
   }
 
+  const completeAnyTask = () => {
+    const workCol = allGrids[2]
+    const ix = workCol.getItem(0) === floatingItem ? 1 : 0
+    const mitem = workCol.getItem(ix)
+    completeMyTask(mitem)
+  }
+
   setInterval(() => {
     if (Math.random() < 0.9) return
     createTask()
-  }, 350)
+  }, 250)
 
-  setInterval(() => {
-    if (Math.random() < 0.4) return
-    completeTask()
+  const doWork = () => {
+    const task = startTask()
+    if (task) {
+      setTimeout(() => {
+        completeMyTask(task)
+        setTimeout(doWork, 500 + Math.random() * 1000)
+      }, 8000 + Math.random() * 4000)
+    } else {
+      // recheck
+      setTimeout(doWork, 500 + Math.random() * 1000)
+    }
+  }
 
-    setTimeout(() => {
-      startTask()
-    }, 500)
-  }, 2000)
+  doWork()
+  doWork()
 
   const bugsCounter = document.querySelector('#num-bugs')
   const featCounter = document.querySelector('#num-feat')
   setInterval(() => {
     bugsCounter.textContent = `${activeBugs.size}`
     featCounter.textContent = `${addedFeatures.size}`
-  }, 100)
+  }, 1000)
+
+  createTask()
+  createTask()
+  createTask()
+  createTask()
+  createTask()
+  bugsCounter.textContent = `${activeBugs.size}`
+  featCounter.textContent = `${addedFeatures.size}`
 })
