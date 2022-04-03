@@ -81,19 +81,42 @@ body {
   padding: 8px 16px;
   margin: 8px;
 }
+
 .item-content p {
+  margin: 0;
+}
+body.show-type .item-content p,
+body.show-complexity .item-content p {
   margin: 0 0 8px;
 }
+
 .item-type,
 .item-complexity,
 .item-assignment,
 .item-number {
-  display: inline-block;
+  /* display: inline-block; */
   width: 24px;
   height: 24px;
   line-height: 24px;
   text-align: center;
+  display: none;
 }
+
+body.show-complexity .item-complexity {
+  display: inline-block;
+}
+body.show-type .item-type {
+  display: inline-block;
+}
+
+#team-members {
+  display: none;
+}
+body.show-assignment .item-assignment,
+body.show-assignment #team-members {
+  display: inline-block;
+}
+
 .item-type {
   border-radius: 4px;
   color: #ffffff;

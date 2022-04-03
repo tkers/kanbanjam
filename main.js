@@ -254,4 +254,28 @@ window.addEventListener('load', () => {
   createTask()
   createTask()
   refreshStats()
+
+  setTimeout(() => {
+    document.body.classList.add('show-complexity')
+    allGrids.forEach((grid) => {
+      grid.refreshItems()
+      grid.layout()
+    })
+  }, 5000)
+
+  setTimeout(() => {
+    document.body.classList.add('show-assignment')
+    allGrids.forEach((grid) => {
+      grid.refreshItems()
+      grid.layout()
+    })
+  }, 15000)
+
+  setTimeout(() => {
+    document.body.classList.add('show-type')
+    allGrids.forEach((grid) => {
+      grid.refreshItems()
+      grid.layout()
+    })
+  }, 25000)
 })
