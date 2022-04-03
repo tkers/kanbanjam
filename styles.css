@@ -78,23 +78,61 @@ body {
   border: 2px solid #000000;
   border-radius: 8px;
   box-shadow: 2px 2px 0px #000000;
-  padding: 16px 24px;
+  padding: 8px 16px;
   margin: 8px;
+}
+.item-content p {
+  margin: 0 0 8px;
+}
+.item-type,
+.item-complexity,
+.item-assignment,
+.item-number {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+}
+.item-type {
+  border-radius: 4px;
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  font-weight: bold;
+}
+.item-type-bug {
+  background-color: #f43c2e;
+}
+.item-type-feat {
+  background-color: #60bf64;
+}
+.item-type-task {
+  background-color: #4abfec;
+}
+.item-complexity {
+  border-radius: 16px;
+  background-color: #eee;
+  font-weight: bold;
+  width: 36px;
+}
+.item-number {
+  float: right;
+  width: auto;
+  text-transform: uppercase;
+  color: #444;
+  font-weight: bold;
 }
 .item-assignment {
   color: #ffffff;
   font-size: 12px;
   font-weight: bold;
   border-radius: 50px;
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  text-align: center;
-  line-height: 24px;
   vertical-align: top;
 }
 .item .item-assignment {
   float: right;
+  margin-left: 8px;
 }
 
 .counter {

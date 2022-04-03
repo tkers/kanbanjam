@@ -132,14 +132,26 @@ window.addEventListener('load', () => {
     item.dataset.ticketId = ticket.id
     const itemContent = document.createElement('div')
     itemContent.className = 'item-content'
-    const title = `TICK-${ticket.id.padStart(4, '0')} [${
-      ticket.type === 'Bug' ? 'BUG' : 'FEAT'
-    }]`
+    const title = `LDJ-${ticket.id}`
     const description =
       ticket.type === 'Bug' ? makeBugFlavour() : makeFeatFlavour()
-    itemContent.innerHTML = `<strong>${title}</strong><div class="item-assignment"></div><br/>${description} (${
-      ticket.size
-    }) ${ticket.reward || ''}`
+    const typeIcon =
+      ticket.type === 'Bug' ? '!' : ticket.type === 'Feature' ? '+' : '•'
+    const typeCN =
+      ticket.type === 'Bug'
+        ? 'bug'
+        : ticket.type === 'Feature'
+        ? 'feat'
+        : 'task'
+    itemContent.innerHTML = `
+      <p>
+        <strong>${title}</strong><br/>${description}
+      </p>
+      <div class="item-assignment"></div>
+      <!-- <div class="item-number">tick-0000</div> -->
+      <div class="item-type item-type-${typeCN}">${typeIcon}</div>
+      <div class="item-complexity">${ticket.size}</div>`
+
     item.appendChild(itemContent)
 
     const newItem = backCol.add(item, { index: -1, active: false })
@@ -154,7 +166,6 @@ window.addEventListener('load', () => {
     const item = todoCol.getItem(ix)
     if (!item) return
     const as = item.getElement().querySelector('.item-assignment')
-    as.classList.add('item-assigned')
     as.textContent = worker.name
     as.style.backgroundColor = `hsl(${(worker.id * 80) % 360}, 78%, 42%)`
     todoCol.send(item, workCol, -1)
