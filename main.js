@@ -119,35 +119,75 @@ window.addEventListener('load', () => {
   const addComp = () => enableFeature('show-complexity')
   const addType = () => enableFeature('show-type')
 
+  const remAssi = () => disableFeature('show-assignment')
+  const remComp = () => disableFeature('show-complexity')
+  const remType = () => disableFeature('show-type')
+
+  const getSpecialBugs = () => {
+    const bugs = []
+    if (document.body.classList.contains('show-assignment')) {
+      bugs.push({
+        description:
+          'The tickets are no longer showing the assigned dev on them, luckily an update is available!',
+        reward: addAssi,
+        spawn: remAssi,
+      })
+    }
+    if (document.body.classList.contains('show-complexity')) {
+      bugs.push({
+        description:
+          'The complexity estimations are no longer visible, please upgrade our tracker!',
+        reward: addComp,
+        spawn: remComp,
+      })
+    }
+    if (document.body.classList.contains('show-type')) {
+      bugs.push({
+        description:
+          'The tickets are suddenly missing the type icons. Support told us to upgrade to the latest version.',
+        reward: addType,
+        spawn: remType,
+      })
+    }
+    return bugs
+  }
+
   const specialTickets = [
     {
       description:
         'Upgrade your tracker software to add complexity estimations',
       reward: addComp,
+      at: 10,
     },
     {
       description: 'Hire a new developer to your team',
       reward: addDevs,
+      at: 12,
     },
     {
       description: 'Upgrade your tracker software to upload avatars',
       reward: addAssi,
+      at: 14,
     },
     {
       description: 'Hire a new developer to your team',
       reward: addDevs,
+      at: 16,
     },
     {
       description: 'Upgrade your ticket tracker to visualise bugs more easily',
       reward: addType,
+      at: 16,
     },
     {
       description: 'Hire a new developer to your team',
       reward: addDevs,
+      at: 20,
     },
     {
       description: 'Hire a new developer to your team',
       reward: addDevs,
+      at: 25,
     },
   ]
 
@@ -162,7 +202,7 @@ window.addEventListener('load', () => {
     const ticket = { id: `${nextId++}` }
 
     const timeForSpecial =
-      specialTickets.length > 0 && nextId > (8 - specialTickets.length) * 8
+      specialTickets.length > 0 && nextId > specialTickets[0].at
 
     if (timeForSpecial && Math.random() < 0.9) {
       const st = specialTickets.shift()
@@ -171,11 +211,20 @@ window.addEventListener('load', () => {
       ticket.size = rand([8, 8, 16, 16, 32])
       ticket.reward = st.reward
     } else if (Math.random() < 0.4) {
-      ticket.type = 'Bug'
-      ticket.description = makeBugFlavour()
-      ticket.reward = decBugs
       ticket.size = rand([1, 1, 2, 2, 4, 4, 8, 8, 16, 32])
-      activeBugs++
+      const specialBugs = getSpecialBugs()
+      if (Math.random() < 0.5 || specialBugs.length == 0) {
+        ticket.type = 'Bug'
+        ticket.description = makeBugFlavour()
+        ticket.reward = decBugs
+        activeBugs++
+      } else {
+        const spbu = rand(specialBugs)
+        ticket.type = 'Task'
+        ticket.description = spbu.description
+        ticket.reward = spbu.reward
+        spbu.spawn && spbu.spawn()
+      }
     } else {
       ticket.type = 'Feature'
       ticket.description = makeFeatFlavour()
@@ -235,6 +284,14 @@ window.addEventListener('load', () => {
 
   const enableFeature = (feat) => {
     document.body.classList.add(feat)
+    allGrids.forEach((grid) => {
+      grid.refreshItems()
+      grid.layout()
+    })
+  }
+
+  const disableFeature = (feat) => {
+    document.body.classList.remove(feat)
     allGrids.forEach((grid) => {
       grid.refreshItems()
       grid.layout()
@@ -318,4 +375,10 @@ window.addEventListener('load', () => {
   createTask()
   createTask()
   refreshStats()
+
+  // setTimeout(() => {
+  //   enableFeature('show-complexity')
+  //   enableFeature('show-assignment')
+  //   enableFeature('show-type')
+  // }, 100)
 })
