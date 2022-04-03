@@ -16,6 +16,12 @@ import {
 export const allTasks = new Map()
 let nextTaskId = 1
 
+export const completeTaskById = (id) => {
+  const task = allTasks.get(id)
+  task.done = true
+  task.reward && task.reward()
+}
+
 export const countCompletedFeatures = () => {
   let n = 0
   allTasks.forEach((task, id) => {

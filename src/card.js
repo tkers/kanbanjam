@@ -20,3 +20,9 @@ export const createCard = ({ id, type, description, size }) => {
 
   return item
 }
+
+export const assignWorkerToCard = (card, worker) => {
+  const as = card.querySelector('.item-assignment')
+  as.textContent = worker.name
+  as.style.backgroundColor = `hsl(${(worker.id * 80) % 360}, 78%, 42%)`
+}

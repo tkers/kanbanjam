@@ -33,6 +33,11 @@ export const refreshBoard = () => {
   })
 }
 
+export const firstAvailableItem = (col) => {
+  const firstTicket = col.getItem(0)
+  return firstTicket !== getItemBeingDragged() ? firstTicket : col.getItem(1)
+}
+
 const createDragContainer = () => {
   const dragContainer = document.createElement('div')
   dragContainer.style.position = 'fixed'
