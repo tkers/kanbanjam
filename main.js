@@ -114,46 +114,73 @@ window.addEventListener('load', () => {
     })
   })
 
+  const addDevs = () => workers.push(newWorker(100))
+  const addAssi = () => enableFeature('show-assignment')
+  const addComp = () => enableFeature('show-complexity')
+  const addType = () => enableFeature('show-type')
+
   const specialTickets = [
     {
       description:
         'Upgrade your tracker software to add complexity estimations',
-      reward: 'comp',
+      reward: addComp,
+    },
+    {
+      description: 'Hire a new developer to your team',
+      reward: addDevs,
     },
     {
       description: 'Upgrade your tracker software to upload avatars',
-      reward: 'assi',
+      reward: addAssi,
     },
-    { description: 'Hire a new developer to your team', reward: 'dev' },
+    {
+      description: 'Hire a new developer to your team',
+      reward: addDevs,
+    },
     {
       description: 'Upgrade your ticket tracker to visualise bugs more easily',
-      reward: 'type',
+      reward: addType,
     },
-    { description: 'Hire a new developer to your team', reward: 'dev' },
+    {
+      description: 'Hire a new developer to your team',
+      reward: addDevs,
+    },
+    {
+      description: 'Hire a new developer to your team',
+      reward: addDevs,
+    },
   ]
 
+  const decBugs = () => {
+    activeBugs--
+  }
+  const incFeat = () => {
+    completedFeatures++
+  }
+
   const getNextTicket = () => {
-    const ticket = {
-      id: `${nextId++}`,
-      size: rand([1, 2, 2, 4, 4, 4, 8, 8, 16, 32]),
-    }
+    const ticket = { id: `${nextId++}` }
 
     const timeForSpecial =
-      specialTickets.length > 0 && nextId > (6 - specialTickets.length) * 8
+      specialTickets.length > 0 && nextId > (8 - specialTickets.length) * 8
 
-    if (Math.random() < 0.4) {
-      ticket.type = 'Bug'
-      ticket.description = makeBugFlavour()
-      activeBugs++
-    } else if (timeForSpecial && Math.random() < 0.9) {
+    if (timeForSpecial && Math.random() < 0.9) {
       const st = specialTickets.shift()
       ticket.type = 'task'
       ticket.description = st.description
-      ticket.size = st.size || ticket.size
+      ticket.size = rand([8, 8, 16, 16, 32])
       ticket.reward = st.reward
+    } else if (Math.random() < 0.4) {
+      ticket.type = 'Bug'
+      ticket.description = makeBugFlavour()
+      ticket.reward = decBugs
+      ticket.size = rand([1, 1, 2, 2, 4, 4, 8, 8, 16, 32])
+      activeBugs++
     } else {
       ticket.type = 'Feature'
       ticket.description = makeFeatFlavour()
+      ticket.size = rand([1, 2, 4, 8, 8, 8, 8, 16, 16, 32])
+      ticket.reward = incFeat
     }
 
     allTickets.set(ticket.id, ticket)
@@ -220,13 +247,7 @@ window.addEventListener('load', () => {
     if (!mitem) return
     const ticket = allTickets.get(mitem.getElement().dataset.ticketId)
     ticket.done = true
-    if (ticket.type === 'Bug') activeBugs--
-    if (ticket.type === 'Feature') completedFeatures++
-
-    if (ticket.reward === 'dev') workers.push(newWorker(100))
-    if (ticket.reward === 'assi') enableFeature('show-assignment')
-    if (ticket.reward === 'comp') enableFeature('show-complexity')
-    if (ticket.reward === 'type') enableFeature('show-type')
+    ticket.reward && ticket.reward()
 
     workCol.send(mitem, doneCol, 0)
   }

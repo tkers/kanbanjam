@@ -86,7 +86,8 @@ body {
   margin: 0;
 }
 body.show-type .item-content p,
-body.show-complexity .item-content p {
+body.show-complexity .item-content p,
+body.show-assignment .item-content p {
   margin: 0 0 8px;
 }
 
