@@ -1,0 +1,19 @@
+{
+  "name": "tracker-slacker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:tkers/tracker-slacker.git",
+  "author": "Tijn Kersjes <tijn@divbyzero.nl>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@rollup/plugin-node-resolve": "^13.1.3",
+    "muuri": "^0.9.5",
+    "rollup": "^2.70.1",
+    "rollup-plugin-terser": "^7.0.2",
+    "web-animations-js": "^2.3.2"
+  },
+  "scripts": {
+    "build": "rollup -c"
+  }
+}
