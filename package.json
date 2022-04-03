@@ -1,8 +1,8 @@
 {
-  "name": "tracker-slacker",
+  "name": "kanbanjam",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github.com:tkers/tracker-slacker.git",
+  "repository": "git@github.com:tkers/kanbanjam.git",
   "author": "Tijn Kersjes <tijn@divbyzero.nl>",
   "license": "MIT",
   "private": true,
