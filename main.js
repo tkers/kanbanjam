@@ -114,17 +114,54 @@ window.addEventListener('load', () => {
     })
   })
 
-  const createTask = () => {
+  const specialTickets = [
+    {
+      description:
+        'Upgrade your tracker software to add complexity estimations',
+      reward: 'comp',
+    },
+    {
+      description: 'Upgrade your tracker software to upload avatars',
+      reward: 'assi',
+    },
+    { description: 'Hire a new developer to your team', reward: 'dev' },
+    {
+      description: 'Upgrade your ticket tracker to visualise bugs more easily',
+      reward: 'type',
+    },
+    { description: 'Hire a new developer to your team', reward: 'dev' },
+  ]
+
+  const getNextTicket = () => {
     const ticket = {
       id: `${nextId++}`,
-      type: Math.random() > 0.5 ? 'Bug' : 'Feature',
       size: rand([1, 2, 2, 4, 4, 4, 8, 8, 16, 32]),
     }
-    if (ticket.type === 'Bug') activeBugs++
-    if (ticket.type === 'Feature' && Math.random() > 0.5) {
-      ticket.reward = rand(['10x', 'dev', 'qa'])
+
+    const timeForSpecial =
+      specialTickets.length > 0 && nextId > (6 - specialTickets.length) * 8
+
+    if (Math.random() < 0.4) {
+      ticket.type = 'Bug'
+      ticket.description = makeBugFlavour()
+      activeBugs++
+    } else if (timeForSpecial && Math.random() < 0.9) {
+      const st = specialTickets.shift()
+      ticket.type = 'task'
+      ticket.description = st.description
+      ticket.size = st.size || ticket.size
+      ticket.reward = st.reward
+    } else {
+      ticket.type = 'Feature'
+      ticket.description = makeFeatFlavour()
     }
+
     allTickets.set(ticket.id, ticket)
+    return ticket
+  }
+
+  const createTask = () => {
+    const ticket = getNextTicket()
 
     const backCol = allGrids[0]
     const item = document.createElement('div')
@@ -132,9 +169,6 @@ window.addEventListener('load', () => {
     item.dataset.ticketId = ticket.id
     const itemContent = document.createElement('div')
     itemContent.className = 'item-content'
-    const title = `LDJ-${ticket.id}`
-    const description =
-      ticket.type === 'Bug' ? makeBugFlavour() : makeFeatFlavour()
     const typeIcon =
       ticket.type === 'Bug' ? '!' : ticket.type === 'Feature' ? '+' : '•'
     const typeCN =
@@ -145,7 +179,7 @@ window.addEventListener('load', () => {
         : 'task'
     itemContent.innerHTML = `
       <p>
-        <strong>${title}</strong><br/>${description}
+        <strong>LDJ-${ticket.id}</strong><br/>${ticket.description}
       </p>
       <div class="item-assignment"></div>
       <!-- <div class="item-number">tick-0000</div> -->
@@ -172,6 +206,14 @@ window.addEventListener('load', () => {
     return item
   }
 
+  const enableFeature = (feat) => {
+    document.body.classList.add(feat)
+    allGrids.forEach((grid) => {
+      grid.refreshItems()
+      grid.layout()
+    })
+  }
+
   const completeMyTask = (mitem) => {
     const workCol = allGrids[2]
     const doneCol = allGrids[3]
@@ -182,8 +224,9 @@ window.addEventListener('load', () => {
     if (ticket.type === 'Feature') completedFeatures++
 
     if (ticket.reward === 'dev') workers.push(newWorker(100))
-    if (ticket.reward === '10x') workers.push(newWorker(200))
-    if (ticket.reward === 'qa') workers.push(newWorker(70))
+    if (ticket.reward === 'assi') enableFeature('show-assignment')
+    if (ticket.reward === 'comp') enableFeature('show-complexity')
+    if (ticket.reward === 'type') enableFeature('show-type')
 
     workCol.send(mitem, doneCol, 0)
   }
@@ -199,7 +242,7 @@ window.addEventListener('load', () => {
     if (Math.random() < 0.9) return
     createTask()
     refreshStats()
-  }, 250)
+  }, 400)
 
   setInterval(() => {
     workers.forEach((worker) => {
@@ -254,28 +297,4 @@ window.addEventListener('load', () => {
   createTask()
   createTask()
   refreshStats()
-
-  setTimeout(() => {
-    document.body.classList.add('show-complexity')
-    allGrids.forEach((grid) => {
-      grid.refreshItems()
-      grid.layout()
-    })
-  }, 5000)
-
-  setTimeout(() => {
-    document.body.classList.add('show-assignment')
-    allGrids.forEach((grid) => {
-      grid.refreshItems()
-      grid.layout()
-    })
-  }, 15000)
-
-  setTimeout(() => {
-    document.body.classList.add('show-type')
-    allGrids.forEach((grid) => {
-      grid.refreshItems()
-      grid.layout()
-    })
-  }, 25000)
 })
