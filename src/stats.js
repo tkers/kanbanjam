@@ -19,3 +19,9 @@ export const refreshStats = () => {
     )
     .join(' ')
 }
+
+export const setupStats = () => {
+  setInterval(() => {
+    refreshStats()
+  }, 500)
+}

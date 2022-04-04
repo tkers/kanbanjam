@@ -19,7 +19,7 @@ const getSpecialBugs = () => {
     bugs.push({
       description:
         'The tickets are no longer showing the assigned dev on them, luckily an update is available!',
-      reward: addAssi,
+      onDone: addAssi,
       spawn: remAssi,
     })
   }
@@ -27,7 +27,7 @@ const getSpecialBugs = () => {
     bugs.push({
       description:
         'The complexity estimations are no longer visible, please upgrade our tracker!',
-      reward: addComp,
+      onDone: addComp,
       spawn: remComp,
     })
   }
@@ -35,7 +35,7 @@ const getSpecialBugs = () => {
     bugs.push({
       description:
         'The tickets are suddenly missing the type icons. Support told us to upgrade to the latest version.',
-      reward: addType,
+      onDone: addType,
       spawn: remType,
     })
   }
@@ -45,37 +45,37 @@ const getSpecialBugs = () => {
 const specialTickets = [
   {
     description: 'Upgrade your tracker software to add complexity estimations',
-    reward: addComp,
+    onDone: addComp,
     at: 10,
   },
   {
     description: 'Hire a new developer to your team',
-    reward: addWorker,
+    onDone: addWorker,
     at: 12,
   },
   {
     description: 'Upgrade your tracker software to upload avatars',
-    reward: addAssi,
+    onDone: addAssi,
     at: 14,
   },
   {
     description: 'Hire a new developer to your team',
-    reward: addWorker,
+    onDone: addWorker,
     at: 16,
   },
   {
     description: 'Upgrade your ticket tracker to visualise bugs more easily',
-    reward: addType,
+    onDone: addType,
     at: 16,
   },
   {
     description: 'Hire a new developer to your team',
-    reward: addWorker,
+    onDone: addWorker,
     at: 20,
   },
   {
     description: 'Hire a new developer to your team',
-    reward: addWorker,
+    onDone: addWorker,
     at: 25,
   },
 ]
@@ -92,7 +92,7 @@ export const getRandomChallenge = () => {
     task.type = 'task'
     task.description = st.description
     task.size = rand([8, 8, 16, 16, 32])
-    task.reward = st.reward
+    task.onDone = st.onDone
   } else if (Math.random() < 0.4) {
     task.size = rand([1, 1, 2, 2, 4, 4, 8, 8, 16, 32])
     const specialBugs = getSpecialBugs()
@@ -103,7 +103,7 @@ export const getRandomChallenge = () => {
       const spbu = rand(specialBugs)
       task.type = 'Task'
       task.description = spbu.description
-      task.reward = spbu.reward
+      task.onDone = spbu.onDone
       spbu.spawn && spbu.spawn()
     }
   } else {
