@@ -11,37 +11,39 @@
     <div class="toolbar">
       <strong>KanBanJam</strong> v0.5.0
 
-      <div class="counter"><strong id="num-bugs"></strong> active bugs</div>
+      <div class="counter"><strong id="num-bugs">0</strong> active bugs</div>
       <div class="counter">
-        <strong id="num-feat"></strong> features implemented
+        <strong id="num-feat">0</strong> features implemented
       </div>
       <div class="counter" id="team-members"></div>
     </div>
 
     <div class="board">
       <div class="board-column">
-        <div class="column-title">Backlog</div>
+        <div class="column-title">Backlog <span id="wip-backlog">0</span></div>
         <div class="column-wrap">
           <div class="column" id="col-backlog"></div>
         </div>
       </div>
 
       <div class="board-column">
-        <div class="column-title">Todo</div>
+        <div class="column-title">Todo <span id="wip-todo">0</span></div>
         <div class="column-wrap">
           <div class="column" id="col-todo"></div>
         </div>
       </div>
 
       <div class="board-column">
-        <div class="column-title">In progress</div>
+        <div class="column-title">
+          In progress <span id="wip-progress">0</span>
+        </div>
         <div class="column-wrap">
           <div class="column" id="col-progress"></div>
         </div>
       </div>
 
       <div class="board-column">
-        <div class="column-title">Done!</div>
+        <div class="column-title">Done <span id="wip-done">1</span></div>
         <div class="column-wrap">
           <div class="column" id="col-done">
             <div class="item">

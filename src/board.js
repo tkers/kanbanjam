@@ -23,6 +23,13 @@ const dragSorts = {
   done: false,
 }
 
+const counters = {
+  backlog: '#wip-backlog',
+  todo: '#wip-todo',
+  progress: '#wip-progress',
+  done: '#wip-done',
+}
+
 let itemBeingDragged
 export const getItemBeingDragged = () => itemBeingDragged
 
@@ -94,5 +101,15 @@ export const setupBoard = () => {
     grid.on('dragEnd', () => {
       itemBeingDragged = null
     })
+
+    const counter = document.querySelector(counters[name])
+    const updateMyCounter = () => {
+      counter.innerText = grid.getItems().length
+    }
+
+    grid.on('add', updateMyCounter)
+    grid.on('remove', updateMyCounter)
+    grid.on('send', updateMyCounter)
+    grid.on('receive', updateMyCounter)
   })
 }
