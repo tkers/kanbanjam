@@ -16,8 +16,29 @@ body {
   user-select: none;
 }
 
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #ffffff;
+  padding: 8px 44px; /* 32 + 12 */
+  margin-bottom: 8px;
+
+  background-color: #ffffff;
+  color: #1a1a1a;
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toolbar strong {
+  color: #000000;
+  /* color: #d87f7a; */
+}
+
 .board {
-  padding: 32px;
+  margin-top: 48px;
+  padding: 24px;
   white-space: nowrap;
 }
 .board-column {
@@ -43,7 +64,7 @@ body {
   background-color: #f9d9d8;
   border-radius: 6px;
 
-  max-height: calc(100vh - 200px);
+  max-height: calc(100vh - 170px);
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }
