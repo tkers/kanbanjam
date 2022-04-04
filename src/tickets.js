@@ -1,9 +1,9 @@
-import { getNewTask, completeTaskById } from './task'
+import { allTasks, createTask, completeTaskById } from './task'
 import { createCard, assignWorkerToCard } from './card'
 import { board, firstAvailableItem } from './board'
 
-export const createTicket = () => {
-  const task = getNewTask()
+export const createTicket = (details) => {
+  const task = createTask(details)
   const card = createCard(task)
 
   board.backlog.add(card, { index: -1, active: false })
@@ -19,8 +19,12 @@ export const startTicket = (worker) => {
   return item
 }
 
+export const getTicketSize = (ticket) => {
+  return allTasks.get(ticket.getElement().dataset.taskId).size
+}
+
 export const completeTicket = (item) => {
   if (!item) return
-  completeTaskById(item.getElement().dataset.ticketId)
+  completeTaskById(item.getElement().dataset.taskId)
   board.progress.send(item, board.done, 0)
 }

@@ -15,7 +15,7 @@ export const createCard = ({ id, type, description, size }) => {
 
   const item = document.createElement('div')
   item.className = 'item'
-  item.dataset.ticketId = id
+  item.dataset.taskId = id
   item.appendChild(itemContent)
 
   return item
