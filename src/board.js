@@ -52,7 +52,7 @@ export const setupBoard = () => {
   Object.entries(elems).forEach(([name, query], ix) => {
     const elem = document.querySelector(query)
     const grid = new Muuri(elem, {
-      dragEnabled: elem !== elems.done,
+      dragEnabled: query !== elems.done,
       dragContainer: createDragContainer(),
       dragSort: dragSorts[name],
       dragAutoScroll: {
