@@ -2,7 +2,7 @@ import { setupBoard } from './board'
 import { setupTasks } from './task'
 import { setupWorkers, addWorker } from './workers'
 import { setupStats } from './stats'
-import { startGame } from './story'
+import { startGame, startMayhem } from './story'
 
 window.addEventListener('load', () => {
   // setup board and start loops
@@ -16,4 +16,7 @@ window.addEventListener('load', () => {
 
   // start the game logic
   startGame()
+
+  // addWorker()
+  // startMayhem()
 })

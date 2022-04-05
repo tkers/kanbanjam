@@ -6,8 +6,8 @@ export const createTicket = (details) => {
   const task = createTask(details)
   const card = createCard(task)
 
-  board.backlog.add(card, { index: -1, active: false })
-  const item = board.backlog.getItem(-1)
+  board.backlog.add(card, { index: 0, active: false })
+  const item = board.backlog.getItem(0)
   board.backlog.show([item])
 }
 

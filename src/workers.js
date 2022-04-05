@@ -1,19 +1,19 @@
 import { startTicket, getTicketSize, completeTicket } from './tickets'
 
 let nextWorkerId = 0
-const newWorker = (spd) => ({
+const newWorker = () => ({
   name: String.fromCharCode(
     65 + (nextWorkerId % 26),
     Math.floor(65 + Math.random() * 26)
   ),
   id: nextWorkerId++,
   currentTask: null,
-  speed: spd || 1,
+  speed: 1,
   workLeft: 0,
 })
 export const workers = []
-export const addWorker = (spd) => {
-  workers.push(newWorker(spd))
+export const addWorker = () => {
+  workers.push(newWorker())
 }
 
 const updateWorkers = (dt) => {
@@ -28,7 +28,7 @@ const updateWorkers = (dt) => {
       const ticket = startTicket(worker)
       if (ticket) {
         worker.currentTicket = ticket
-        worker.workLeft = getTicketSize(ticket)
+        worker.workLeft = 1.875 * getTicketSize(ticket) // 32 pts = 60 sec
       } else {
         worker.workLeft = 1 + Math.random()
       }
@@ -36,6 +36,9 @@ const updateWorkers = (dt) => {
   })
 }
 
+let workerInterval
 export const setupWorkers = (dt = 100) => {
-  setInterval(() => updateWorkers(dt / 1000), dt)
+  workerInterval = setInterval(() => updateWorkers(dt / 1000), dt)
 }
+
+export const stopAllWorkers = () => clearInterval(workerInterval)
