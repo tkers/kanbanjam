@@ -17,7 +17,7 @@ const checkGameOver = () => {
       type: 'Task',
       size: 32,
       onPlan: () => window.location.reload(),
-      description: `<strong>Game Over<strong><br><br>You managed to implement <strong>${countCompletedFeatures()} features</strong> before inevitably losing to the overwhelming amount of bugs in your product.<br><br><em>Play again?</em>`,
+      description: `<strong>Game Over</strong><br><br>You managed to implement <strong>${countCompletedFeatures()} features</strong> before inevitably losing to the overwhelming amount of bugs in your product.<br><br><em>Play again?</em>`,
     })
   }
 }
