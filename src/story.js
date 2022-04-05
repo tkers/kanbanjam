@@ -23,7 +23,7 @@ const checkGameOver = () => {
 }
 let meanSizeIx = 1.4
 const getRandomSize = () => {
-  meanSizeIx += 0.02
+  meanSizeIx += 0.025
   const offset = Math.floor(Math.random() * 3) - Math.floor(Math.random() * 3)
   const sizeIx = Math.floor(meanSizeIx + offset)
   const ix = Math.max(0, Math.min(sizeIx, 5))
@@ -83,9 +83,9 @@ const sprinkleChaos = () => {
     if (tokens > 0) {
       tokens--
       createRandomTicket()
-      maxTokens += 0.032
-      inDelay -= 0.016
-      outDelay -= 0.032
+      maxTokens += 0.034
+      inDelay -= 0.018
+      outDelay -= 0.036
     }
   }
 }
