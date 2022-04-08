@@ -29,6 +29,7 @@ body {
   color: #1a1a1a;
 
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 10;
 }
 
 .toolbar strong {
@@ -72,9 +73,9 @@ body {
   background-color: #f9d9d8;
   border-radius: 6px;
 
-  max-height: calc(100vh - 170px);
+  /* max-height: calc(100vh - 170px);
   overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch; */
 }
 .column {
   position: relative;
